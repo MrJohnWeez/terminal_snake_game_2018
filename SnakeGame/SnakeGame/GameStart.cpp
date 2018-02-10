@@ -1,37 +1,83 @@
-#include <conio.h>
+﻿#include "KeyInput.h"
+#include <vector>
 #include <iostream>
+#include <string>
+#include <time.h>
+
+
 using namespace std;
 
-#define KEY_UP 72
-#define KEY_DOWN 80
-#define KEY_LEFT 75
-#define KEY_RIGHT 77
-#define KEY_ESC 1
-#define KEY_R 19
+KeyInput _KeyInput;
+
+bool runGame = true;
 
 int main()
 {
-	int c = 0;
-	while (1)
-	{
-		c = 0;
-
-		switch ((c = _getch())) {
-		case KEY_UP:
-			cout << endl << "Up" << endl;//key up
-			break;
-		case KEY_DOWN:
-			cout << endl << "Down" << endl;   // key down
-			break;
-		case KEY_LEFT:
-			cout << endl << "Left" << endl;  // key left
-			break;
-		case KEY_RIGHT:
-			cout << endl << "Right" << endl;  // key right
-			break;
+	clock_t begin;
+	clock_t deltaTime = 0;
+	while (runGame) {
+		begin = clock();
+		deltaTime += clock() - begin;
+		// Set a string vector to all spaces then in the loop change the spaces to a # sign to make lines
+		if (deltaTime > 30) {
+			deltaTime = 0;
+			cout << string(16, '\n') <<
+				"_________________________________________________________________\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"_________________________________________________________________" << endl;
 		}
-
+		/*string currKey = _KeyInput.GetKey();
+		if (currKey == "UP") {
+			cout << string(16, '\n') <<
+				"_________________________________________________________________\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"_________________________________________________________________" << endl;
+		}
+		else  {
+			cout << string(16, '\n') <<
+				"_________________________________________________________________\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"|                                                              |\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"|                                                               |\n"
+				"________________________HHHHHHHHHHHHHHHHH________________________" << endl;
+		}*/
 	}
-
 	return 0;
 }
