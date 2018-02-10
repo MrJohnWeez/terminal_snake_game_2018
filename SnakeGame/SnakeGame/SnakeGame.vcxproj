@@ -118,10 +118,12 @@
     <ClCompile Include="Display.cpp" />
     <ClCompile Include="GameStart.cpp" />
     <ClCompile Include="KeyInput.cpp" />
+    <ClCompile Include="SnakeBoard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Display.h" />
     <ClInclude Include="KeyInput.h" />
+    <ClInclude Include="SnakeBoard.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
