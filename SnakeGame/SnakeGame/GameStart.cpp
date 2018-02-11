@@ -4,6 +4,7 @@
 #include <string>
 #include <time.h>
 #include <conio.h>
+#include <deque>
 
 #define XLENGTH 20
 #define YLENGTH 20
@@ -35,6 +36,16 @@ string display[FYLENGTH][FXLENGTH];
 KeyInput _KeyInput;
 
 bool runGame = true;
+int tempSize = 0;
+int tailLength = 0;
+struct cord {
+	int x;
+	int y;
+	cord(int inx, int iny) {
+		x = inx;
+		y = iny;
+	}
+};
 
 void Draw()
 {
@@ -45,13 +56,16 @@ void Draw()
 		}
 		cout << endl;
 	}
-	cout << "Score: " << score;
+	cout << "Score: " << score << "TL: " << tailLength << "DQS: " << tempSize;
+	
 }
 int randomInt(int min, int max) {
 	int range = max - min + 1;
 	return rand() % range + min;
 
 }
+
+deque<cord> trail;
 
 int main()
 {
@@ -108,12 +122,11 @@ int main()
 
 		
 
-
 		deltaTime += clock() - begin;
 		
 		if (deltaTime > 60) {
 			deltaTime = 0;
-			display[sy][sx] = " ";
+			trail.push_front(cord(sx, sy));
 			if (ydir > 0) {
 				sy--;
 			}
@@ -140,11 +153,18 @@ int main()
 				sx = 1;
 			}
 			if (display[sy][sx] == "*") {
+				tailLength++;
 				score += 10;
 				fx = randomInt(1, FXLENGTH - 2);
 				fy = randomInt(1, FYLENGTH - 2);
 				display[fy][fx] = "*";
 			}
+			if (trail.size() > tailLength) {
+				cord tempC = trail.back();
+				display[tempC.y][tempC.x] = " ";
+				trail.pop_back();
+			}
+			tempSize = trail.size();
 			display[sy][sx] = "0";
 
 			Draw();

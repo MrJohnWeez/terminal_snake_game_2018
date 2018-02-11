@@ -1,2 +1,3 @@
 ﻿  GameStart.cpp
+c:\users\john\documents\repositorycontrol\terminal_snake_game_2018\snakegame\snakegame\gamestart.cpp(163): warning C4018: '>': signed/unsigned mismatch
   SnakeGame.vcxproj -> C:\Users\John\Documents\RepositoryControl\terminal_snake_game_2018\SnakeGame\Debug\SnakeGame.exe
