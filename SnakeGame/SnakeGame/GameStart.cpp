@@ -24,6 +24,9 @@
 
 int sx = FXLENGTH / 2;
 int sy = FYLENGTH / 2;
+int score = 0;
+int fx = 4;
+int fy = 4;
 
 using namespace std;
 
@@ -42,6 +45,12 @@ void Draw()
 		}
 		cout << endl;
 	}
+	cout << "Score: " << score;
+}
+int randomInt(int min, int max) {
+	int range = max - min + 1;
+	return rand() % range + min;
+
 }
 
 int main()
@@ -57,56 +66,87 @@ int main()
 		}
 	}
 	display[sy][sx] = "0";
+	display[fy][fx] = "*";
+
 
 	clock_t begin;
 	clock_t deltaTime = 0;
 	string currKey = "";
 	int preCode = -1;
 	int c = 0;
+	int ydir = 0;
+	int xdir = 0;
 	while (runGame) {
 		begin = clock();
 		
 		if (_kbhit()) {
 			c = _getch();
 			if (c != 224) {
-				display[sy][sx] = " ";
+				
 				if (c == KEY_UP) {
-					sy--;
+					ydir = 1;
+					xdir = 0;
 				}
 				else if (c == KEY_DOWN) {
-					sy++;
+					ydir = -1;
+					xdir = 0;
 				}
 				else if (c == KEY_LEFT) {
-					sx--;
+					ydir = 0;
+					xdir = -1;
 				}
 				else if (c == KEY_RIGHT) {
-					sx++;
+					ydir = 0;
+					xdir = 1;
 				}
 				else if (c == KEY_ESC) {
 					runGame = false;
 				}
-
-
-				if (sy < 1) {
-					sy = FYLENGTH-2;
-				}
-				else if (sx < 1) {
-					sx = FXLENGTH-2;
-				}
-				else if (sy > FYLENGTH-2) {
-					sy = 1;
-				}
-				else if (sx > FXLENGTH-2) {
-					sx = 1;
-				}
-				display[sy][sx] = "0";
 			}
 
 		}
+
+		
+
+
 		deltaTime += clock() - begin;
 		
 		if (deltaTime > 60) {
 			deltaTime = 0;
+			display[sy][sx] = " ";
+			if (ydir > 0) {
+				sy--;
+			}
+			else if (ydir < 0) {
+				sy++;
+			}
+			else if (xdir > 0) {
+				sx += 1;
+			}
+			else if (xdir < 0) {
+				sx -= 1;
+			}
+
+			if (sy < 1) {
+				sy = FYLENGTH - 2;
+			}
+			else if (sx < 1) {
+				sx = FXLENGTH - 2;
+			}
+			else if (sy > FYLENGTH - 2) {
+				sy = 1;
+			}
+			else if (sx > FXLENGTH - 2) {
+				sx = 1;
+			}
+			if (display[sy][sx] == "*") {
+				score += 10;
+				fx = randomInt(1, FXLENGTH - 2);
+				fy = randomInt(1, FYLENGTH - 2);
+				display[fy][fx] = "*";
+			}
+			display[sy][sx] = "0";
+
 			Draw();
 		}
 	}
