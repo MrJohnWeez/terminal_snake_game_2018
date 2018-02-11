@@ -10,11 +10,8 @@ using namespace std;
 
 class KeyInput {
 public:
-	int preCode = -1;
-	int c = 0;
-
+	int c = -1;
 	string GetKey();
-	void Reset();
 };
 
 #endif

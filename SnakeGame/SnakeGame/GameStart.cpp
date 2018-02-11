@@ -6,7 +6,7 @@
 #include <conio.h>
 #include <deque>
 
-#define XLENGTH 20
+#define XLENGTH 41
 #define YLENGTH 20
 #define FXLENGTH 2 + XLENGTH
 #define FYLENGTH 2 + YLENGTH
@@ -22,12 +22,11 @@
 
 
 
-
-int sx = FXLENGTH / 2;
+int sx = (FXLENGTH / 2)+1;
 int sy = FYLENGTH / 2;
 int score = 0;
-int fx = 4;
-int fy = 4;
+int fx;
+int fy;
 
 using namespace std;
 
@@ -38,6 +37,7 @@ KeyInput _KeyInput;
 bool runGame = true;
 int tempSize = 0;
 int tailLength = 0;
+bool gameRunning = false;
 struct cord {
 	int x;
 	int y;
@@ -56,7 +56,7 @@ void Draw()
 		}
 		cout << endl;
 	}
-	cout << "Score: " << score << "TL: " << tailLength << "DQS: " << tempSize;
+	cout << "Score: " << score;
 	
 }
 int randomInt(int min, int max) {
@@ -80,6 +80,11 @@ int main()
 		}
 	}
 	display[sy][sx] = "0";
+	fx = randomInt(1, FXLENGTH - 2);
+	if (fx % 2 != 1) {
+		fx++;
+	}
+	fy = randomInt(1, FYLENGTH - 2);
 	display[fy][fx] = "*";
 
 
@@ -93,39 +98,34 @@ int main()
 	while (runGame) {
 		begin = clock();
 		
-		if (_kbhit()) {
-			c = _getch();
-			if (c != 224) {
-				
-				if (c == KEY_UP) {
-					ydir = 1;
-					xdir = 0;
-				}
-				else if (c == KEY_DOWN) {
-					ydir = -1;
-					xdir = 0;
-				}
-				else if (c == KEY_LEFT) {
-					ydir = 0;
-					xdir = -1;
-				}
-				else if (c == KEY_RIGHT) {
-					ydir = 0;
-					xdir = 1;
-				}
-				else if (c == KEY_ESC) {
-					runGame = false;
-				}
-			}
-
+		string c = _KeyInput.GetKey();
+		if(c != "") gameRunning = true;
+		if (c == "UP") {
+			ydir = 1;
+			xdir = 0;
+		}
+		else if (c == "DOWN") {
+			ydir = -1;
+			xdir = 0;
+		}
+		else if (c == "LEFT") {
+			ydir = 0;
+			xdir = -1;
+		}
+		else if (c == "RIGHT") {
+			ydir = 0;
+			xdir = 1;
+		}
+		else if (c == "ESC") {
+			runGame = false;
 		}
 
-		
 
 		deltaTime += clock() - begin;
 		
 		if (deltaTime > 60) {
 			deltaTime = 0;
+			display[sy][sx] = "o";
 			trail.push_front(cord(sx, sy));
 			if (ydir > 0) {
 				sy--;
@@ -134,10 +134,10 @@ int main()
 				sy++;
 			}
 			else if (xdir > 0) {
-				sx += 1;
+				sx += 2;
 			}
 			else if (xdir < 0) {
-				sx -= 1;
+				sx -= 2;
 			}
 
 			if (sy < 1) {
@@ -156,9 +156,17 @@ int main()
 				tailLength++;
 				score += 10;
 				fx = randomInt(1, FXLENGTH - 2);
+				if (fx % 2 != 1) {
+					fx++;
+				}
 				fy = randomInt(1, FYLENGTH - 2);
 				display[fy][fx] = "*";
 			}
+			else if (gameRunning && display[sy][sx] == "o") {
+				runGame = false;
+			}
+
+
 			if (trail.size() > tailLength) {
 				cord tempC = trail.back();
 				display[tempC.y][tempC.x] = " ";

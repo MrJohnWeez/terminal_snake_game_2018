@@ -16,35 +16,31 @@ using namespace std;
 
 // Return current key
 string KeyInput::GetKey() {
-	c = _getch();
-	if (c != 224 && c != preCode) {
-		preCode = c;
-		switch (c) {
-		case KEY_UP:
-			return "UP";
-			break;
-		case KEY_DOWN:
-			return "DOWN";
-			break;
-		case KEY_LEFT:
-			return "LEFT";
-			break;
-		case KEY_RIGHT:
-			return "RIGHT";
-			break;
-		case KEY_ESC:
-			return "ESC";
-			break;
-		case KEY_R:
-			return "R";
-			break;
+	if (_kbhit()) {
+		c = _getch();
+		if (c != 224) {
+			switch (c) {
+			case KEY_UP:
+				return "UP";
+				break;
+			case KEY_DOWN:
+				return "DOWN";
+				break;
+			case KEY_LEFT:
+				return "LEFT";
+				break;
+			case KEY_RIGHT:
+				return "RIGHT";
+				break;
+			case KEY_ESC:
+				return "ESC";
+				break;
+			case KEY_R:
+				return "R";
+				break;
+			}
 		}
 	}
 	return "";
 
-}
-
-void KeyInput::Reset() {
-	preCode = -1;
-	c = 0;
 }
