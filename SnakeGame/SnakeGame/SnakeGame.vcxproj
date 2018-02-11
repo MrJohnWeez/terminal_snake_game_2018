@@ -115,15 +115,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Display.cpp" />
+    <ClCompile Include="Cord.cpp" />
+    <ClCompile Include="FrameUpdate.cpp" />
     <ClCompile Include="GameStart.cpp" />
     <ClCompile Include="KeyInput.cpp" />
-    <ClCompile Include="SnakeBoard.cpp" />
+    <ClCompile Include="SnakeObject.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Display.h" />
+    <ClInclude Include="Cord.h" />
+    <ClInclude Include="FrameUpdate.h" />
     <ClInclude Include="KeyInput.h" />
-    <ClInclude Include="SnakeBoard.h" />
+    <ClInclude Include="SnakeObject.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

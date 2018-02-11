@@ -5,6 +5,9 @@
 #include <time.h>
 #include <conio.h>
 #include <deque>
+#include "FrameUpdate.h"
+#include "SnakeObject.h"
+#include "Cord.h"
 
 #define XLENGTH 41
 #define YLENGTH 20
@@ -20,10 +23,6 @@
 #define KEY_R 114
 #define KEY_ENTER 13
 
-
-
-int sx = (FXLENGTH / 2)+1;
-int sy = FYLENGTH / 2;
 int score = 0;
 int fx;
 int fy;
@@ -33,19 +32,15 @@ using namespace std;
 string display[FYLENGTH][FXLENGTH];
 
 KeyInput _KeyInput;
+SnakeObject _SnakeObject = SnakeObject(FYLENGTH, FXLENGTH);
 
 bool runGame = true;
-int tempSize = 0;
-int tailLength = 0;
 bool gameRunning = false;
-struct cord {
-	int x;
-	int y;
-	cord(int inx, int iny) {
-		x = inx;
-		y = iny;
-	}
-};
+
+string currKey = "";
+int c = 0;
+FrameUpdate _FPS;
+
 
 void Draw()
 {
@@ -65,7 +60,7 @@ int randomInt(int min, int max) {
 
 }
 
-deque<cord> trail;
+
 
 int main()
 {
@@ -79,7 +74,7 @@ int main()
 			}
 		}
 	}
-	display[sy][sx] = "0";
+	display[_SnakeObject.sy][_SnakeObject.sx] = "0";
 	fx = randomInt(1, FXLENGTH - 2);
 	if (fx % 2 != 1) {
 		fx++;
@@ -88,72 +83,25 @@ int main()
 	display[fy][fx] = "*";
 
 
-	clock_t begin;
-	clock_t deltaTime = 0;
-	string currKey = "";
-	int preCode = -1;
-	int c = 0;
-	int ydir = 0;
-	int xdir = 0;
+	
 	while (runGame) {
-		begin = clock();
-		
+		// Start frame
+		_FPS.Start();
+
+		// Get keyboard input
 		string c = _KeyInput.GetKey();
-		if(c != "") gameRunning = true;
-		if (c == "UP") {
-			ydir = 1;
-			xdir = 0;
-		}
-		else if (c == "DOWN") {
-			ydir = -1;
-			xdir = 0;
-		}
-		else if (c == "LEFT") {
-			ydir = 0;
-			xdir = -1;
-		}
-		else if (c == "RIGHT") {
-			ydir = 0;
-			xdir = 1;
-		}
-		else if (c == "ESC") {
-			runGame = false;
-		}
+		if (c == "ESC") runGame = false;
 
-
-		deltaTime += clock() - begin;
+		// Update snake's moving direction
+		_SnakeObject.UpdateSnakeDirection(c);
 		
-		if (deltaTime > 60) {
-			deltaTime = 0;
-			display[sy][sx] = "o";
-			trail.push_front(cord(sx, sy));
-			if (ydir > 0) {
-				sy--;
-			}
-			else if (ydir < 0) {
-				sy++;
-			}
-			else if (xdir > 0) {
-				sx += 2;
-			}
-			else if (xdir < 0) {
-				sx -= 2;
-			}
+		if (_FPS.Ready(60)) {
+			
+			_SnakeObject.addTrail();
+			_SnakeObject.Step();
 
-			if (sy < 1) {
-				sy = FYLENGTH - 2;
-			}
-			else if (sx < 1) {
-				sx = FXLENGTH - 2;
-			}
-			else if (sy > FYLENGTH - 2) {
-				sy = 1;
-			}
-			else if (sx > FXLENGTH - 2) {
-				sx = 1;
-			}
-			if (display[sy][sx] == "*") {
-				tailLength++;
+			if (display[_SnakeObject.sy][_SnakeObject.sx] == "*") {
+				_SnakeObject.tailLength++;
 				score += 10;
 				fx = randomInt(1, FXLENGTH - 2);
 				if (fx % 2 != 1) {
@@ -162,141 +110,22 @@ int main()
 				fy = randomInt(1, FYLENGTH - 2);
 				display[fy][fx] = "*";
 			}
-			else if (gameRunning && display[sy][sx] == "o") {
+			else if (_SnakeObject.isMoving && display[_SnakeObject.sy][_SnakeObject.sx] == "o") {
 				runGame = false;
 			}
 
+			// Remove End of tail
+			Cord tempC = _SnakeObject.popTrail();
+			display[tempC.y][tempC.x] = " ";
 
-			if (trail.size() > tailLength) {
-				cord tempC = trail.back();
-				display[tempC.y][tempC.x] = " ";
-				trail.pop_back();
-			}
-			tempSize = trail.size();
-			display[sy][sx] = "0";
+			// Set head to new location
+			display[_SnakeObject.sy][_SnakeObject.sx] = "0";
 
 			Draw();
+
+			// Change to snake body char
+			display[_SnakeObject.sy][_SnakeObject.sx] = "o";
 		}
 	}
 	return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-//#include "KeyInput.h"
-//#include <vector>
-//#include <iostream>
-//#include <string>
-//#include <time.h>
-//
-//
-//
-//using namespace std;
-//
-//KeyInput _KeyInput;
-//
-//bool runGame = true;
-//
-//int main()
-//{
-//	cout << string(16, '\n') <<
-//		"_________________________________________________________________\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"_________________________________________________________________" << endl;
-//	clock_t begin;
-//	clock_t deltaTime = 0;
-//	vector<string> test(14, " ");
-//	string foo;
-//	int c = 0;
-//	cin >> foo;
-//	while (runGame) {
-//		begin = clock();
-//		deltaTime += clock() - begin;
-//		// Set a string vector to all spaces then in the loop change the spaces to a # sign to make lines
-//		if (deltaTime > 60 && c < 14) {
-//			deltaTime = 0;
-//
-//			test[c] = "#";
-//			cout <<
-//				"_________________________________________________________________\n"
-//				"|                             " << test[0] << "                                 |\n"
-//				"|                             " << test[1] << "                                 |\n"
-//				"|                             " << test[2] << "                                 |\n"
-//				"|                             " << test[3] << "                                 |\n"
-//				"|                             " << test[4] << "                                 |\n"
-//				"|                             " << test[5] << "                                 |\n"
-//				"|                             " << test[6] << "                                 |\n"
-//				"|                             " << test[7] << "                                 |\n"
-//				"|                             " << test[8] << "                                 |\n"
-//				"|                             " << test[9] << "                                 |\n"
-//				"|                             " << test[10] << "                                 |\n"
-//				"|                             " << test[11] << "                                 |\n"
-//				"|                             " << test[12] << "                                 |\n"
-//				"|                             " << test[13] << "                                 |\n"
-//				"_________________________________________________________________" << endl;
-//			c++;
-//		}
-//
-//		/*string currKey = _KeyInput.GetKey();
-//		if (currKey == "UP") {
-//		cout << string(16, '\n') <<
-//		"_________________________________________________________________\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"_________________________________________________________________" << endl;
-//		}
-//		else  {
-//		cout << string(16, '\n') <<
-//		"_________________________________________________________________\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"|                                                              |\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"|                                                               |\n"
-//		"________________________HHHHHHHHHHHHHHHHH________________________" << endl;
-//		}*/
-//	}
-//	return 0;
-//}

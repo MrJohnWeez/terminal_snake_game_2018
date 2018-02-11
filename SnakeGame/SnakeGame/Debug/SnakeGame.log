@@ -1,3 +1,4 @@
-﻿  GameStart.cpp
-c:\users\john\documents\repositorycontrol\terminal_snake_game_2018\snakegame\snakegame\gamestart.cpp(170): warning C4018: '>': signed/unsigned mismatch
+﻿  SnakeObject.cpp
+c:\users\john\documents\repositorycontrol\terminal_snake_game_2018\snakegame\snakegame\snakeobject.cpp(24): warning C4018: '>': signed/unsigned mismatch
+c:\users\john\documents\repositorycontrol\terminal_snake_game_2018\snakegame\snakegame\snakeobject.cpp(29): warning C4715: 'SnakeObject::popTrail': not all control paths return a value
   SnakeGame.vcxproj -> C:\Users\John\Documents\RepositoryControl\terminal_snake_game_2018\SnakeGame\Debug\SnakeGame.exe
