@@ -26,6 +26,7 @@ Cord SnakeObject::popTrail() {
 		trail.pop_back();
 		return tempC;
 	}
+	return Cord(0, 0);
 }
 
 void SnakeObject::Step() {

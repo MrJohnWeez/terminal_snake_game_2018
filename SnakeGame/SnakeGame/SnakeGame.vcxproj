@@ -116,14 +116,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Cord.cpp" />
+    <ClCompile Include="Display.cpp" />
     <ClCompile Include="FrameUpdate.cpp" />
+    <ClCompile Include="Fruit.cpp" />
     <ClCompile Include="GameStart.cpp" />
     <ClCompile Include="KeyInput.cpp" />
     <ClCompile Include="SnakeObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cord.h" />
+    <ClInclude Include="Display.h" />
     <ClInclude Include="FrameUpdate.h" />
+    <ClInclude Include="Fruit.h" />
     <ClInclude Include="KeyInput.h" />
     <ClInclude Include="SnakeObject.h" />
   </ItemGroup>

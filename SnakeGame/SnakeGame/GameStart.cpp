@@ -1,19 +1,15 @@
 ﻿#include "KeyInput.h"
-#include <vector>
-#include <iostream>
-#include <string>
-#include <time.h>
 #include <conio.h>
-#include <deque>
 #include "FrameUpdate.h"
 #include "SnakeObject.h"
 #include "Cord.h"
+#include "Display.h"
+#include "Fruit.h"
 
-#define XLENGTH 41
-#define YLENGTH 20
-#define FXLENGTH 2 + XLENGTH
-#define FYLENGTH 2 + YLENGTH
+#include <string>
 
+#define FXLENGTH 43 // Must be odd
+#define FYLENGTH 22 // Must be even
 
 #define KEY_UP 72
 #define KEY_DOWN 80
@@ -24,66 +20,24 @@
 #define KEY_ENTER 13
 
 int score = 0;
-int fx;
-int fy;
 
 using namespace std;
 
-string display[FYLENGTH][FXLENGTH];
-
 KeyInput _KeyInput;
+FrameUpdate _FPS;
+Display _Display = Display(FXLENGTH, FYLENGTH);
 SnakeObject _SnakeObject = SnakeObject(FYLENGTH, FXLENGTH);
+Fruit _Fruit;
 
 bool runGame = true;
-bool gameRunning = false;
-
-string currKey = "";
 int c = 0;
-FrameUpdate _FPS;
-
-
-void Draw()
-{
-	system("cls");
-	for (int row = 0; row < FYLENGTH; row++) {
-		for (int col = 0; col < FXLENGTH; col++) {
-			cout << display[row][col];
-		}
-		cout << endl;
-	}
-	cout << "Score: " << score;
-	
-}
-int randomInt(int min, int max) {
-	int range = max - min + 1;
-	return rand() % range + min;
-
-}
-
-
 
 int main()
 {
-	for (int row = 0; row < FYLENGTH; row++) {
-		for (int col = 0; col < FXLENGTH; col++) {
-			if (row == 0 || col == FXLENGTH -1 || row == FYLENGTH -1 || col == 0) {
-				display[row][col] = "#";
-			}
-			else {
-				display[row][col] = " ";
-			}
-		}
-	}
-	display[_SnakeObject.sy][_SnakeObject.sx] = "0";
-	fx = randomInt(1, FXLENGTH - 2);
-	if (fx % 2 != 1) {
-		fx++;
-	}
-	fy = randomInt(1, FYLENGTH - 2);
-	display[fy][fx] = "*";
+	_Display.window[_SnakeObject.sy][_SnakeObject.sx] = "0";
+	Cord currFruit = _Fruit.NewFruit(FXLENGTH, FYLENGTH);
+	_Display.window[currFruit.y][currFruit.x] = "*";
 
-
-	
 	while (runGame) {
 		// Start frame
 		_FPS.Start();
@@ -97,34 +51,34 @@ int main()
 		
 		if (_FPS.Ready(60)) {
 			
+			
 			_SnakeObject.addTrail();
+
+			// Move snake in correct direction
 			_SnakeObject.Step();
 
-			if (display[_SnakeObject.sy][_SnakeObject.sx] == "*") {
+			if (_Display.window[_SnakeObject.sy][_SnakeObject.sx] == "*") {
 				_SnakeObject.tailLength++;
 				score += 10;
-				fx = randomInt(1, FXLENGTH - 2);
-				if (fx % 2 != 1) {
-					fx++;
-				}
-				fy = randomInt(1, FYLENGTH - 2);
-				display[fy][fx] = "*";
+				Cord newFruit = _Fruit.NewFruit(FXLENGTH, FYLENGTH);
+				_Display.window[newFruit.y][newFruit.x] = "*";
 			}
-			else if (_SnakeObject.isMoving && display[_SnakeObject.sy][_SnakeObject.sx] == "o") {
+			else if (_SnakeObject.isMoving && _Display.window[_SnakeObject.sy][_SnakeObject.sx] == "o") {
 				runGame = false;
 			}
 
 			// Remove End of tail
 			Cord tempC = _SnakeObject.popTrail();
-			display[tempC.y][tempC.x] = " ";
+			if(tempC.x != 0 && tempC.y != 0) _Display.window[tempC.y][tempC.x] = " ";
 
 			// Set head to new location
-			display[_SnakeObject.sy][_SnakeObject.sx] = "0";
+			_Display.window[_SnakeObject.sy][_SnakeObject.sx] = "0";
 
-			Draw();
+			_Display.Print();
+			cout << "Score: " << score;
 
 			// Change to snake body char
-			display[_SnakeObject.sy][_SnakeObject.sx] = "o";
+			_Display.window[_SnakeObject.sy][_SnakeObject.sx] = "o";
 		}
 	}
 	return 0;

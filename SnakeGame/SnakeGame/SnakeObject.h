@@ -22,7 +22,7 @@ public:
 	void Step();
 	int ydir;
 	int xdir;
-	int tailLength;
+	unsigned int tailLength;
 	int sx;
 	int sy;
 	int boardY;
