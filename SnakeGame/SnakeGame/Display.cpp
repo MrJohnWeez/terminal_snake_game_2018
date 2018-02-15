@@ -7,17 +7,13 @@
 using namespace std;
 
 void Display::Print() {
-	Clear();
+	system("cls");
 	for (int row = 0; row < height; row++) {
 		for (int col = 0; col < width; col++) {
 			cout << window[row][col];
 		}
 		cout << endl;
 	}
-}
-
-void Display::Clear() {
-	system("cls");
 }
 
 void Display::SetBoarders() {

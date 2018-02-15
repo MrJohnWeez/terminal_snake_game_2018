@@ -10,7 +10,6 @@ public:
 	int height;
 	vector<vector<string>> window;
 	void Print();
-	void Clear();
 	void SetBoarders();
 	Display(int x, int y);
 };
